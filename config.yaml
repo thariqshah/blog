@@ -1,6 +1,7 @@
 baseURL: https://blog.aristocat.in/
 languageCode: en-us
-title: Blog| Thariq
+title: Thariq's workplace
+copyright: "© [thariq shah](https://github.com/thariqshah)"
 theme: ["PaperMod"]
 
 enableRobotsTXT: true
@@ -14,20 +15,20 @@ minify:
 
 params:
   env: production # to enable google analytics, opengraph, twitter-cards and schema.
-  title: ExampleSite
-  description: "ExampleSite description"
+  title: Thariq's workplace
+  description: "Tech blog"
   keywords: [Blog, Portfolio, PaperMod]
   author: Me
   images: ["<link or path of image for opengraph, twitter-cards>"]
   DateFormat: "January 2, 2006"
-  defaultTheme: auto # dark, light
+  defaultTheme: dark # dark, light
   disableThemeToggle: false
 
   ShowReadingTime: true
   ShowShareButtons: true
   ShowPostNavLinks: true
   ShowBreadCrumbs: true
-  ShowCodeCopyButtons: false
+  ShowCodeCopyButtons: true
   ShowWordCount: true
   ShowRssButtonInSectionTermList: true
   UseHugoToc: true
@@ -42,40 +43,42 @@ params:
   assets:
     # disableHLJS: true # to disable highlight.js
     # disableFingerprinting: true
-    favicon: "<link / abs url>"
-    favicon16x16: "<link / abs url>"
-    favicon32x32: "<link / abs url>"
-    apple_touch_icon: "<link / abs url>"
-    safari_pinned_tab: "<link / abs url>"
+    favicon: "images/favicon.png"
+    favicon16x16: "images/favicon.png"
+    favicon32x32: "images/favicon.png"
+    apple_touch_icon: "images/favicon.png"
+    safari_pinned_tab: "images/favicon.png"
 
   label:
-    text: "Blog"
+    text: "Thariq's Workplace"
     iconHeight: 35
+    icon: /images/favicon.png
 
-  # profile-mode
   profileMode:
-    enabled: false # needs to be explicitly set
-    title: ExampleSite
-    subtitle: "This is subtitle"
-    imageUrl: "<img location>"
+    enabled: false
+    title: Thariq Shah
+    subtitle: "Java | Spring | K8s | Microservices | Go"
+    imageUrl: "images/profile.jpg"
     imageWidth: 120
     imageHeight: 120
     imageTitle: my image
     buttons:
       - name: Posts
         url: posts
-      - name: Tags
-        url: tags
 
-  # home-info mode
   homeInfoParams:
-    Title: "Hello there \U0001F44B"
-    Content: Welcome to my blog, WIP!!
+    Title: "Hello world, I'm Thariq \U0001F44B"
+    Content: >
+      As an experienced software engineer with a passion for solving problems and breaking stuffs.
+      My blog explores real-world tech challenges I faced and hobby projects I worked on.
 
   socialIcons:
+    - name: email
+      url: mailto:thariqshah@gmail.com
     - name: github
       url: "https://github.com/thariqshah"
-
+    - name: linkedin
+      url: "https://www.linkedin.com/in/thariq-shah"
 
   cover:
     hidden: false # hide everywhere but not in structured data
@@ -84,39 +87,44 @@ params:
 
   editPost:
     URL: "https://github.com/thariqshah/blog/content"
-    Text: "Suggest Changes" # edit text
-    appendFilePath: true # to append file path to Edit link
+    Text: "Suggest Changes"
+    appendFilePath: true
 
-  # for search
-  # https://fusejs.io/api/options.html
-  fuseOpts:
-    isCaseSensitive: false
-    shouldSort: true
-    location: 0
-    distance: 1000
-    threshold: 0.4
-    minMatchCharLength: 0
-    limit: 10 # refer: https://www.fusejs.io/api/methods.html#search
-    keys: ["title", "permalink", "summary", "content"]
-
-menu:
-  main:
-    - identifier: posts
-      name: Posts
-      url: /posts/
-      weight: 10
-    - identifier: categories
-      name: Categories
-      url: /categories/
-      weight: 20
-    - identifier: archives
-      name: Archives
-      url: /archives/
-      weight: 20
-    - identifier: tags
-      name: Tags
-      url: /tags/
-      weight: 30
+languages:
+  en:
+    languageName: "English"
+    weight: 1
+    taxonomies:
+      category: categories
+      tag: tags
+      series: series
+      about: about
+    menu:
+      main:
+        - identifier: posts
+          name: Posts
+          url: /posts/
+          weight: 1
+        - identifier: series
+          name: Series
+          url: /series/
+          weight: 2
+        - identifier: categories
+          name: Categories
+          url: /categories/
+          weight: 3
+        - identifier: archives
+          name: Archives
+          url: /archives/
+          weight: 4
+        - identifier: tags
+          name: Tags
+          url: /tags/
+          weight: 5
+        - identifies: about
+          name: About me
+          url: /about/
+          weight: 10
 
 # Read: https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#using-hugos-syntax-highlighter-chroma
 pygmentsUseClasses: true

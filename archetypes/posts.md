@@ -8,4 +8,6 @@ image:
   alt: misplaced
 categories:  ["placeholder"]
 tags: ["first", "sample"]
+series: ["placeholder"]
+searchHidden: true
 ---
