@@ -30,7 +30,6 @@ Java is a dynamic programing language and libraries use reflections. Not all lib
 [Libraries and Framework support](https://www.graalvm.org/native-image/libraries-and-frameworks/)
 
 All the class and bytecodes that are reachable at runtime should be known at build time.
-You're mileage may vary.
 
 ## What are we building?
 
@@ -45,7 +44,7 @@ We will start with a simple baseline application with Postgres DB.
 ## Let's do some coding!
 
 
-Springboot 3.2 has made it very easy to spin-up a native application and with paketo buildpacks
+Springboot 3.3 has made it very easy to spin-up a native application and with paketo buildpacks
 there barely any difference between packaging a jar and a native executable.
 
 ### Creating springboot project
@@ -53,7 +52,7 @@ there barely any difference between packaging a jar and a native executable.
 we'll start off by going to [https://start.spring.io/](https://start.spring.io/) to create our first springboot
 application
 
-![image alt text](/sprinboot-3-2-crud-on-graal-image/post/spring-init-dependency.JPG)
+![image alt text](/sprinboot-3-3-on-graal-image/post/spring-init-dependency.JPG)
 
 ### First run setup
 
@@ -120,7 +119,7 @@ Goto [http://localhost:8080/actuator/health](http://localhost:8080/actuator/heal
 
 ![image alt text](/sprinboot-3-3-on-graal-image/post/health-check.JPG)
 
-Source can be found here [project repository](https://github.com/thariqshah/inventory-service/tree/24e02ab54781be810408dbaa1ca3cdc705323549)
+Source can be found here [inventory-service repository](https://github.com/thariqshah/inventory-service/tree/24e02ab54781be810408dbaa1ca3cdc705323549)
 
 ---
 
