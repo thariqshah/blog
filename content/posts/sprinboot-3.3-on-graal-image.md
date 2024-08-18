@@ -1,12 +1,12 @@
 ---
 author: [ 'Thariq Shah' ]
-title: 'Low memory footprint with springboot 3.3 Graalvm image'
+title: 'Low memory footprint with Spring boot 3.3 and Graalvm native image'
 date: 2024-08-18T11:58:14+05:30
 draft: false
 ShowToc: true
 cover:
   image: sprinboot-3-3-on-graal-image/cover/sprinboot-3.3-on-graal-image-cover.png
-categories: [ 'how-to' ]
+categories: [ 'how-to', 'GraalVM','Springboot']
 tags: [ 'springboot', 'graalvm']
 series: [ 'Native Spring' ]
 searchHidden: true
@@ -15,25 +15,25 @@ searchHidden: true
 ## What is a Native Image?
 
 GraalVM native image is an ahead-of-time compilation technology that generates native executables.
-Native executables have low resource usages and fast startup time in a compact packaging.
+Native executables have low resource usage and fast startup time in compact packaging.
 
 It is an ideal candidate for serverless workloads in Java.
 
-I use it to create hobby projects, so I don't exhaust my free tier quotas on services like [fly.io](fly.io) 😉
+I use it to create hobby projects, so I don't exhaust my free tier quotas on services like [fly.io](https://fly.io) 😉
 
 GraalVM Native Image is a broad topic with many resources and videos available for a deeper understanding.
 The [Official documentation](https://www.graalvm.org/latest/reference-manual/native-image/) is a great place to start.
 
 ## What's the catch?
 
-Java is a dynamic programing language and libraries use reflections. Not all libraries work with GraalVM, and you may encounter issues. 
+Java is a dynamic programming language and libraries use reflections. Not all libraries work with GraalVM, and you may encounter issues.
 [Libraries and Framework support](https://www.graalvm.org/native-image/libraries-and-frameworks/)
 
-All the class and bytecodes that are reachable at runtime should be known at build time.
+All the classes and bytecodes that are reachable at runtime should be known at build time.
 
 ## What are we building?
 
-This blog series is the start of building a native springboot applications with GraalVM native Image.
+This blog series is the start of building a native springboot application with GraalVM native Image.
 We will start with a simple baseline application with Postgres DB.
 
 ## Prerequisites
@@ -44,19 +44,19 @@ We will start with a simple baseline application with Postgres DB.
 ## Let's do some coding!
 
 
-Springboot 3.3 has made it very easy to spin-up a native application and with paketo buildpacks
-there barely any difference between packaging a jar and a native executable.
+Spring boot 3.3 has made it very easy to spin up a native application and with Paketo buildpacks
+there is barely any difference between packaging a jar and a native executable.
 
-### Creating springboot project
+### Creating Spring boot project
 
-we'll start off by going to [https://start.spring.io/](https://start.spring.io/) to create our first springboot
+we'll start off by going to [https://start.spring.io/](https://start.spring.io/) to create our first Spring boot
 application
 
 ![image alt text](/sprinboot-3-3-on-graal-image/post/spring-init-dependency.JPG)
 
 ### First run setup
 
-Now, let's add a JPA datasource to our application and include Actuator for health checks.
+Now, let's add a JPA data source to our application and include Actuator for health checks.
 
 ``` yaml
 spring:
@@ -83,19 +83,19 @@ management:
 ```
 
 ---
-#### Setting up our docker 
+#### Setting up our docker
 
 Open a terminal window and navigate to your project root directory.
 
-We need a postgres instance for our app to connect to and for the let's use the docker run command.
+We need a Postgres instance for our app to connect to and for the let's use the docker run command.
 
-Let's create a docker network first. We need containers to be on the same docker network to connect each other
+Let's create a docker network first. We need containers to be on the same docker network to communicate
 
 ```bash
 docker network create spring-native-app-network
 ```
 
-Now, we'll bring up a postgres container
+Now, we'll bring up a Postgres container
 
 ```bash
 docker run --rm --name postgres-db --network spring-native-app-network -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:latest
@@ -119,7 +119,7 @@ Goto [http://localhost:8080/actuator/health](http://localhost:8080/actuator/heal
 
 ![image alt text](/sprinboot-3-3-on-graal-image/post/health-check.JPG)
 
-Source can be found here [inventory-service repository](https://github.com/thariqshah/inventory-service/tree/24e02ab54781be810408dbaa1ca3cdc705323549)
+The source can be found here [inventory-service repository](https://github.com/thariqshah/inventory-service/tree/24e02ab54781be810408dbaa1ca3cdc705323549)
 
 ---
 
@@ -130,7 +130,5 @@ Source can be found here [inventory-service repository](https://github.com/thari
 | Image size   | 382.13MB | 188.68MB |
 | Startup time | 2.337s   | 0.223s   |
 | Memory Usage | 338.3MB  | 100.2MB  |
-
-
 
 ---
