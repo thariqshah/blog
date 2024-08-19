@@ -22,26 +22,26 @@ searchHidden: true
 
 This article is the second part of [Low memory footprint with Spring boot 3.3 and Graalvm native image](sprinboot-3.3-on-graal-image.md).
 Here, we will be building REST CRUD resources and package them as a native executable in an OCI container.
-We are flyway for database versioning and springdoc library for swagger documentation with web UI.
+We are using flyway for database versioning and springdoc library for swagger documentation with a web UI.
 
 ## Flyway
 
 Flyway is a database migration tool that helps you manage and apply database changes within your application
-to achieve environment parity.
+to achieve database environment parity.
 
 ### Setting up flyway for springboot project
 
 Adding flyway dependency for postgres for maven project.
 
 ```xml
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-database-postgresql</artifactId>
-		</dependency>
+    <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-database-postgresql</artifactId>
+    </dependency>
 ```
 
 Configurations in application.yml
@@ -75,10 +75,10 @@ management:
 
 ### Managing database scripts
 
-Database scripts are inside src/main/resources/db/migration and follows naming conventions
-V<version>__<name>.sql and flyway ensure that migrations are run in order of their versions.
+Database scripts are inside ```src/main/resources/db/migration``` and follows naming conventions
+```V<version>__<name>.sql``` and flyway ensure that migrations are run in order of their versions.
 
-Let's create file in  src/main/resources/db/migration with name V1__create_table_product.sql
+Let's create file in  ```src/main/resources/db/migration``` with name ```V1__create_table_product.sql```
 
 ```sql
 CREATE TABLE product
