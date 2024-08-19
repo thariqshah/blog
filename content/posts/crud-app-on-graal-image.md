@@ -21,7 +21,7 @@ searchHidden: true
 ## Introduction
 
 This article is the second part of [Low memory footprint with Spring boot 3.3 and Graalvm native image](sprinboot-3.3-on-graal-image.md).
-Here, we will be building REST CRUD resources and package them as a native executable in an OCI container.
+Here, we will be building REST CRUD resources and package as a native executable within a container.
 We are using flyway for database versioning and springdoc library for swagger documentation with a web UI.
 
 ## Flyway
