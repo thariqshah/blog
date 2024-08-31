@@ -25,7 +25,7 @@ params:
   disableThemeToggle: false
 
   ShowReadingTime: true
-  ShowShareButtons: true
+  ShowShareButtons: false
   ShowPostNavLinks: true
   ShowBreadCrumbs: true
   ShowCodeCopyButtons: true
@@ -122,7 +122,7 @@ languages:
           url: /tags/
           weight: 5
         - identifies: about
-          name: About me
+          name: About
           url: /about/
           weight: 10
 
