@@ -5,7 +5,7 @@ date : 2024-09-01T12:23:17+05:30
 draft : false
 ShowToc: true
 cover:
-  image: /need-to-solution-home-server/cover/cover.webp
+  image: /need-to-solution-home-server/cover/cover.jpg
 categories:  ["home server"]
 tags: ["home server"]
 series: ["Home Server"]
