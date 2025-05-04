@@ -14,7 +14,7 @@ searchHidden: true
 
 ## 🚀 Running the Valheim Server Using Docker Compose
 
-Below is the Docker Compose configuration we used to deploy a Valheim server on the FriendlyELEC CM3588 board
+The Docker Compose configuration we used to deploy a Valheim server on the FriendlyELEC CM3588 board/Arm SBC
 
 ```yaml
 version: "3"
@@ -46,7 +46,7 @@ services:
     restart: unless-stopped
 ```
 
-> 💡 **Note**: Replace `/path/to/valheim/data` and `/path/to/valheim/server` with actual absolute paths on your FriendlyELEC device.
+> 💡 **Note**: Replace `/path/to/valheim/data` and `/path/to/valheim/server` with actual absolute paths.
 
 ---
 
