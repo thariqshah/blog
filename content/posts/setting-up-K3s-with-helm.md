@@ -54,7 +54,7 @@ Next, copy the k3s.yaml file from your cluster’s machine to the .kube director
 mkdir -p ~/.kube
 ```
 
-copy file /etc/rancher/k3s/k3s.yaml from cluster machine to client machine~/.kube/config
+copy file `/etc/rancher/k3s/k3s.yaml` from cluster machine to client machine `~/.kube/config`
 
 Finally, verify the connection from your client machine
 
@@ -79,7 +79,7 @@ To organize the Traefik deployment, create a dedicated namespace
 kubectl create namespace traefik
 ```
 
-Create values.yaml for Traefik Configuration
+Create `values.yaml` for Traefik Configuration
 
 ```yaml
 globalArguments:
