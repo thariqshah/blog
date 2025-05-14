@@ -181,7 +181,7 @@ create a file secret-dashboard.yaml
 
 ```yaml
 ---
-apiVersion: v1machine’s
+apiVersion: v1
 kind: Secret
 metadata:
   name: traefik-dashboard-auth
