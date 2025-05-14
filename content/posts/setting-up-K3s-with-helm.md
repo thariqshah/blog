@@ -270,6 +270,6 @@ GNU nano 8.3                       etc/hosts
 192.168.0.171 traefik-dashboard.example.com # ip of your cluster
 ```
 
-Now, you can access the Traefik dashboard at traefik-dashboard.example.com in your browser.
+Now, you can access the Traefik dashboard at `traefik-dashboard.example.com` in your browser.
 
 ---
