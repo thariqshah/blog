@@ -12,7 +12,7 @@ series: ["k3s homelab"]
 searchHidden: true
 ---
 
-# 🔐 TLS Certificates for Your Homelab Using Cloudflare + Cert-Manager + Let's Encrypt
+# 🔐 TLS Certificates for Homelab Using Cloudflare + Cert-Manager + Let's Encrypt
 
 With Traefik operational as the ingress controller in a K3s cluster, the next logical step is to provision HTTPS automatically using **Let's Encrypt** certificates, **Cloudflare DNS validation**, and **Cert-Manager**. This ensures encrypted traffic across services in a self-hosted homelab.
 
