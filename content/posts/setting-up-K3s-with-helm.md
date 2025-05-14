@@ -44,7 +44,7 @@ kubectl get nodes
 
 ---
 
-## 🖧 Configuring kubectl for remote accesss in same network
+## 🖧 Configuring kubectl for remote access in same network
 
 Install kubectl from https://kubernetes.io/docs/tasks/tools/
 
@@ -151,7 +151,7 @@ metadata:
 spec:
   headers:
     browserXssFilter: true
-    contentTypeNosniff: truemachine’s
+    contentTypeNosniff: true
     forceSTSHeader: true
     stsIncludeSubdomains: true
     stsPreload: true
@@ -238,8 +238,6 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
-  #tls:
-  #secretName: example-com-tls
 ```
 
 ```bash
@@ -253,7 +251,7 @@ kubectl apply -f ingress.yaml
 To access the dashboard from your local network, update the /etc/hosts file on your machine
 
 ```bash
-sudo nano etc/hosts
+sudo nano /etc/hosts
 ```
 
 Add the following line (replace with your cluster's IP address):
