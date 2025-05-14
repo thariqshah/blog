@@ -8,7 +8,7 @@ cover:
   image: /cert-manager-lets-encrypt/cover/cover.png
 categories: ["homelab", "k3s", "how-to"]
 tags: ["homelab", K3s]
-series: ["k3s homelab"]
+series: ["Home labs"]
 searchHidden: true
 ---
 
