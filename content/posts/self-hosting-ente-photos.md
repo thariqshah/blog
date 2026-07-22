@@ -7,7 +7,7 @@ ShowToc: true
 cover:
   image: /self-hosting-ente-photos/cover/cover.png
 categories: ["homelab", "self-hosting"]
-tags: ["ente", "cloudflare-tunnel", "docker-compose", "minio", "s3", "caddy"]
+tags: ["ente", "cloudflare-tunnel", "docker-compose", "minio", "s3", "caddy", "webauthn", "passkeys"]
 series: ["Home labs"]
 searchHidden: true
 ---
@@ -511,6 +511,78 @@ sudo timedatectl set-ntp true
 No container restart is required afterward. Museum reads system time live, per request, rather than caching it at process start, so the correction takes effect for the very next login attempt.
 
 The broader lesson generalizes past TOTP specifically: any self-hosted service whose correctness depends on clock agreement with an external party — TOTP, JWT expiry validation, TLS certificate validity windows, cron-scheduled jobs coordinating with anything off-box — is quietly relying on the host having a working NTP client. It's cheap enough to verify unconditionally, on any freshly provisioned box, before it becomes the answer to a confusing bug report: `timedatectl status`, check for `synchronized: yes`, move on.
+
+## Addendum: Passkey Support Requires a Fifth Public Hostname
+
+Some months into running this instance, adding a passkey from the Android app — Settings → Security → Passkey, meant to sit alongside the TOTP 2FA described above and let a fingerprint or Face ID unlock stand in for typing a code — kept redirecting to `accounts.ente.com`, Ente's own hosted service, instead of anything resolving to this instance. Worth being precise about what this feature actually is before chasing the bug: on Ente, a passkey is a **second factor**, not a password replacement. It doesn't change how the account's email+password login works; it gives WebAuthn (fingerprint, Face ID, a hardware key) as an alternative to typing a TOTP code at that second step.
+
+### Why a fifth hostname, and not just a flag
+
+Ente's client apps ship several distinct frontends from the same `ghcr.io/ente/web` image — Photos and Public Albums, already routed in this deployment, plus Accounts, Auth, Cast, and a handful of others, each on its own internal port. Passkey enrollment specifically only exists in the Accounts frontend; if it isn't deployed and reachable, there is no code path that can create or verify a passkey at all, on any client, regardless of what else is configured correctly. `museum.yaml` has an `apps.accounts` key for exactly this, defaulting to `https://accounts.ente.com` — Ente's own hosted instance — which is what the mobile app was actually reaching. Nothing was misconfigured so much as never configured; the key was simply absent.
+
+The fix doesn't require a new container. The `web` image is already running the Accounts frontend internally, unused, on port 3001 — it just needed the same three-piece wiring already used for the other hostnames:
+
+`caddy/Caddyfile`, one more block alongside the existing four:
+
+```
+http://accounts.example.com {
+	reverse_proxy web:3001
+}
+```
+
+`cloudflared/config.yml`, one more ingress rule, and a corresponding Public Hostname / DNS CNAME pointed at the tunnel, same pattern as every other hostname in this deployment:
+
+```yaml
+  - hostname: accounts.example.com
+    service: http://caddy:80
+    originRequest:
+      httpHostHeader: accounts.example.com
+```
+
+`museum.yaml`, telling museum to actually send clients to the new hostname instead of its own default:
+
+```yaml
+apps:
+    photos: https://photos.example.com
+    public-albums: https://albums.example.com
+    accounts: https://accounts.example.com
+```
+
+A `docker compose up -d` doesn't pick any of this up on its own — none of these three files are read by Compose itself, they're bind-mounted straight into their respective containers, so Compose sees no service-definition change and leaves all three containers running untouched. Caddy, cloudflared, and museum each needed an explicit `docker restart` before the new route existed anywhere. After that, the mobile app's passkey button correctly landed on the self-hosted Accounts page instead of Ente's own service — and enrollment still failed, silently, on every attempt.
+
+### The second bug, underneath the first
+
+"Silently" is doing real work in that sentence, and it's what made this one worth writing up separately from the routing fix above. The Accounts page loaded, the fingerprint prompt appeared, and then — nothing. No error toast, no red text, just a spinner that gave up. `docker logs` on the Accounts frontend showed the page and its assets serving normally. The interesting log was museum's:
+
+```
+req_method=POST req_uri=/passkeys/registration/begin status_code=200 ...
+```
+
+Called twice (one retry), both times a clean `200`. No corresponding `/passkeys/registration/finish` ever showed up — not a failed one, not one at all. The request that would carry the actual signed credential back to the server never left the browser. That split is the tell: the server handed back a valid registration challenge; whatever happened next happened entirely inside the phone's browser, before it ever tried to talk to museum again.
+
+WebAuthn — the browser API behind every passkey prompt — binds every credential it creates to a **Relying Party ID**: a domain the browser will enforce for the lifetime of that credential, checked against the page's actual origin at creation time and again at every subsequent use. The server includes the RP ID it expects in the registration challenge; if that ID isn't equal to (or a registrable parent of) the page's real origin, the browser refuses to create the credential at all, client-side, before any network call reports the failure back — which is exactly the silent, non-erroring dead end this instance was hitting.
+
+`museum.yaml` had no `webauthn` section anywhere. Ente's own default configuration, absent any override, is:
+
+```yaml
+webauthn:
+    rpid: localhost
+    rporigins:
+        - http://localhost:3001
+```
+
+Sensible for a developer running the stack unmodified on their own machine; silently wrong for a self-hosted instance with the Accounts app on its own real hostname. Every registration challenge museum issued was scoped to `localhost`, which the phone's browser — correctly seeing `accounts.example.com` in its address bar — rejected outright. The fix is the same file, one more section:
+
+```yaml
+webauthn:
+    rpid: accounts.example.com
+    rporigins:
+        - https://accounts.example.com
+```
+
+`rpid` is the domain the credential is scoped to; `rporigins` is the explicit whitelist of full origins (scheme included) the server will accept a WebAuthn ceremony from. Both need to agree with wherever the Accounts app is actually being served — not the Photos app's hostname, not the API hostname, the Accounts one specifically, since that's the origin the browser's `navigator.credentials.create()` call is actually running from. A `docker restart` on museum alone was enough to pick this up; enrollment succeeded on the next attempt, first try.
+
+The general shape of this bug is worth remembering past Ente specifically: any self-hosted service that does its own WebAuthn/passkey handling, rather than delegating to an external identity provider, has some equivalent of an RP ID setting, and it defaults to whatever's convenient for local development — `localhost`, a bare IP, a placeholder domain. It fails exactly like this one did: no error surfaced to the user, no error logged past the initial challenge, just a request that mysteriously never gets past the browser. If a WebAuthn ceremony issues a valid-looking first request and then goes quiet, the RP ID configuration is the first thing worth checking, before assuming the bug is anywhere in the network path that got the request there in the first place.
 
 ## Operational Considerations
 
